@@ -4,26 +4,24 @@ import List from './List';
 
 // test('테스트 #1')
 //
-// describe - it => describe('List') => it('renders tasks')
+// describe - it => describe('List) => it('renders tasks')
 // describe - context - it
-// jest-plugins => jest-plugin-context
-//
+// jest-Plugins => jest-plugin-context  를 활용해야함
 // with tasks
 // - List renders tasks...
-// - List renders “delete” button to delete a task
+// - List renders "완료" button to delete a task
 // without tasks
-// - List renders no task message.
-//
-// TDD cycle: Red - Green - Refactoring
+// - List renders no tasks message.
+// TDD cycle : Red- Green - Refactoring
 
 describe('List', () => {
-  const handleClickDelete = jest.fn();
+  const handleClick = jest.fn();
 
   function renderList(tasks) {
     return render((
       <List
         tasks={tasks}
-        onClickDelete={handleClickDelete}
+        onClickDelete={handleClick}
       />
     ));
   }
@@ -37,25 +35,27 @@ describe('List', () => {
     it('renders tasks', () => {
       const { getByText } = renderList(tasks);
 
+      // 1. task가 추가된다.
       expect(getByText(/Task-1/)).not.toBeNull();
       expect(getByText(/Task-2/)).not.toBeNull();
+
+      // 2.완료 버튼을 눌렀을 떄
+      // 실제 onClickDelete 동작은 상위 컴포넌트에서 동작하는 것
+      // List 컴포넌트에서는 onClickDelete 가 호출될 뿐이다.
     });
 
-    it('renders “완료” button to delete a task', () => {
+    it('renders "완료" button to delete a task ', () => {
       const { getAllByText } = renderList(tasks);
-
       const buttons = getAllByText('완료');
 
       fireEvent.click(buttons[0]);
-
-      expect(handleClickDelete).toBeCalledWith(1);
+      expect(handleClick).toBeCalledWith(1);
     });
   });
 
   context('without tasks', () => {
-    it('renders no task message', () => {
+    it('List renders no tasks message', () => {
       const tasks = [];
-
       const { getByText } = renderList(tasks);
 
       expect(getByText(/할 일이 없어요/)).not.toBeNull();
